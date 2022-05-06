@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "ajpLQgwybaZtl3sfWaOSPE92zRhPEgR9g305nAQSLK90KIq7AN0IYA0/FmJ8PqrUFtS1UT54Dmmp/uUNxpfAKA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Daniel\\Documents\\Developer\\.NET\\BotCadastrarAvaliador\\BotCadastrarAvaliador\\BotCadastrarAvaliador.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Daniel\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\Daniel\\.nuget\\packages\\selenium.webdriver\\4.1.1\\selenium.webdriver.4.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}
