@@ -18,8 +18,8 @@ namespace BotCadastrarAvaliador
 
             if (bot.WaitElement(By.Id("id_username")))
             {
-                if(!bot.SendText(By.Id("id_username"), "2225318")) return;
-                if(!bot.SendText(By.Id("id_password"), "difma+07")) return;
+                if(!bot.SendText(By.Id("id_username"), "siape")) return;
+                if(!bot.SendText(By.Id("id_password"), "senha")) return;
                 Thread.Sleep(300);
                 if(!bot.Click(By.XPath(@"//input[@value='Acessar']"))) return;
 
@@ -27,7 +27,7 @@ namespace BotCadastrarAvaliador
 
                 int row = bot.FindChild("//*[@id=\"bolsas_form\"]/table/tbody/tr", "td[2]", "Abel Batista de Oli");
 
-                MessageBox.Show($"Row: {row}");
+                // MessageBox.Show($"Row: {row}");
 
                 if (row > 0)
                 {
@@ -36,7 +36,7 @@ namespace BotCadastrarAvaliador
                 }
                 else
                 {
-                    MessageBox.Show("Não Achei");
+                    MessageBox.Show("NÃ£o Achei");
                 }
 
 
