@@ -36,8 +36,12 @@
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -74,6 +78,7 @@
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.panel8);
             this.panel5.Controls.Add(this.panel7);
             this.panel5.Controls.Add(this.panel6);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -84,33 +89,55 @@
             // 
             // panel7
             // 
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel7.Location = new System.Drawing.Point(0, 0);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(664, 341);
+            this.panel7.Size = new System.Drawing.Size(664, 60);
             this.panel7.TabIndex = 1;
             // 
             // panel6
             // 
             this.panel6.Controls.Add(this.button1);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel6.Location = new System.Drawing.Point(0, 341);
+            this.panel6.Location = new System.Drawing.Point(0, 357);
             this.panel6.Name = "panel6";
             this.panel6.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.panel6.Size = new System.Drawing.Size(664, 76);
+            this.panel6.Size = new System.Drawing.Size(664, 60);
             this.panel6.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.button1.ForeColor = System.Drawing.Color.Black;
-            this.button1.Location = new System.Drawing.Point(22, 19);
+            this.button1.Location = new System.Drawing.Point(7, 15);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(182, 37);
             this.button1.TabIndex = 0;
             this.button1.Text = "Abrir Arquivo";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.dataGridView1);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel8.Location = new System.Drawing.Point(0, 60);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(664, 297);
+            this.panel8.TabIndex = 2;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.RowTemplate.Height = 25;
+            this.dataGridView1.Size = new System.Drawing.Size(664, 297);
+            this.dataGridView1.TabIndex = 0;
             // 
             // Form1
             // 
@@ -130,6 +157,8 @@
             this.Text = "Cadastrar Avaliadores";
             this.panel5.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
+            this.panel8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -144,5 +173,7 @@
         private Panel panel7;
         private Panel panel6;
         private Button button1;
+        private Panel panel8;
+        private DataGridView dataGridView1;
     }
 }

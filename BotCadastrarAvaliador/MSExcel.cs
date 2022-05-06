@@ -34,6 +34,35 @@ namespace BotCadastrarAvaliador
             }
         }
 
+        public List<string> GetListValues(int planilha_index)
+        {
+            List<string> values = new();
+
+            sheet = book.Sheets[planilha_index];
+            sheet.Select();
+
+            int col = getNumRowCols(false);
+            int row = getNumRowCols(true);
+
+
+
+            return values;
+        }
+
+        private int getNumRowCols(bool isRow) 
+        {
+            sheet.Range["A1"].Select();
+            do
+            {
+                if (isRow) excel.ActiveCell.Offset[1, 0].Select();
+                else excel.ActiveCell.Offset[0, 1].Select();
+
+            } while (excel.ActiveCell.Value != "");
+
+            if (isRow)  return excel.ActiveCell.Row - 1;
+            else return excel.ActiveCell.Column - 1;
+        }
+
         public bool ModificarValores(int PlanilhaIndex, string CelulaInicial, DataGridView Tabela, int TabelaColuna, int QuantidadeDeValores = 1, bool PreenchimentoVertical = true)
         {
             try

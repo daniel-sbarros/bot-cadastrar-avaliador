@@ -9,11 +9,17 @@ namespace BotCadastrarAvaliador
             InitializeComponent();
         }
 
+        private void CarregarDgv()
+        {
+            var excel = new MSExcel("cadastro-de-avaliador-interno-externo.xlsx");
+
+
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             Bot bot = new();
 
-            //bot.OpenPage("https://suap.ifma.edu.br/admin/pesquisa/comissaoeditalpesquisa/?ano=2022&descricao=143");
             bot.OpenPage("https://suap.ifma.edu.br/pesquisa/adicionar_comissao_por_area/187/");
 
             if (bot.WaitElement(By.Id("id_username")))
@@ -27,8 +33,6 @@ namespace BotCadastrarAvaliador
 
                 int row = bot.FindChild("//*[@id=\"bolsas_form\"]/table/tbody/tr", "td[2]", "Abel Batista de Oli");
 
-                // MessageBox.Show($"Row: {row}");
-
                 if (row > 0)
                 {
                     bot.Click(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{row}]/td[1]/input"));
@@ -38,17 +42,10 @@ namespace BotCadastrarAvaliador
                 {
                     MessageBox.Show("Não Achei");
                 }
-
-
-
-
-                //driver.FindElement(By.Name("Salvar")).Click();
             }
             else
             {
             }
-
-            //bot.Close();
         }
     }
 }
