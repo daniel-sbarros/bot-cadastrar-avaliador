@@ -1,0 +1,11 @@
+bin
+obj
+config.txt
+Xlbin
+*.exe
+*.log
+*.bak
+*.user
+*.lnk
+*.pyc
+*.user

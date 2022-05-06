@@ -34,30 +34,45 @@ namespace BotCadastrarAvaliador
             }
         }
 
-        public List<string> GetListValues(int planilha_index)
+        public void Close()
         {
-            List<string> values = new();
+            try
+            {
+                if (excel != null)
+                {
+                    if (book != null) book.Close();
+                    excel.Quit();
+                }
+            }
+            catch (Exception) { }
+        }
+
+        public List<Avaliador> GetListValues(int planilha_index, string tipo)
+        {
+            List<Avaliador> values = new();
 
             sheet = book.Sheets[planilha_index];
             sheet.Select();
 
-            int col = getNumRowCols(false);
-            int row = getNumRowCols(true);
-
-
+            sheet.Range["A2"].Select();
+            while (!string.IsNullOrEmpty(excel.ActiveCell.Value))
+            {
+                values.Add(new Avaliador(excel.ActiveCell.Text, tipo));
+                excel.ActiveCell.Offset[1, 0].Select();
+            }
 
             return values;
         }
 
-        private int getNumRowCols(bool isRow) 
+        private int getNumRowCols(bool isRow = true) 
         {
-            sheet.Range["A1"].Select();
-            do
+            sheet.Range["A2"].Select();
+            while (excel.ActiveCell.Value != "")
             {
                 if (isRow) excel.ActiveCell.Offset[1, 0].Select();
                 else excel.ActiveCell.Offset[0, 1].Select();
 
-            } while (excel.ActiveCell.Value != "");
+            }
 
             if (isRow)  return excel.ActiveCell.Row - 1;
             else return excel.ActiveCell.Column - 1;

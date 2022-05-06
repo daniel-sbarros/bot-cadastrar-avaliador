@@ -26,7 +26,7 @@ namespace BotCadastrarAvaliador
         {
             try
             {
-                driver.Navigate().GoToUrl(url);
+                driver!.Navigate().GoToUrl(url);
                 return true;
             }
             catch (Exception err)
@@ -42,11 +42,11 @@ namespace BotCadastrarAvaliador
             {
                 if (!WaitElement(By.XPath(xpath_row))) throw new Exception("O elemento não existe.");
 
-                var row = driver.FindElements(By.XPath(xpath_row));
+                var row = driver!.FindElements(By.XPath(xpath_row));
 
                 for (int i=0; i < row.Count; i++)
                 {
-                    MessageBox.Show(i + ": " + row[i].FindElement(By.XPath(xpath_child)).Text);
+                    //MessageBox.Show(i + ": " + row[i].FindElement(By.XPath(xpath_child)).Text);
                     if (row[i].FindElement(By.XPath(xpath_child)).Text.Contains(value)) return i + 1;
                 }
             }
@@ -87,7 +87,7 @@ namespace BotCadastrarAvaliador
             {
                 if (!WaitElement(by_element, 10)) throw new Exception("Elemento não existe ou não foi carregado.");
 
-                driver.FindElement(by_element).Click();
+                driver!.FindElement(by_element).Click();
                 return true;
             }
             catch (Exception err)
@@ -103,7 +103,7 @@ namespace BotCadastrarAvaliador
             {
                 if (!WaitElement(by_element, 10)) throw new Exception("Elemento não existe ou não foi carregado.");
 
-                driver.FindElement(by_element).SendKeys(text.ToString());
+                driver!.FindElement(by_element).SendKeys(text.ToString());
                 return true;
             }
             catch (Exception err)
