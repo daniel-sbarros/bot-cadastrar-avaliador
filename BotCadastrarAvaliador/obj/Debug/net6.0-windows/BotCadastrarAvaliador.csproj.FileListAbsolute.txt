@@ -49,6 +49,7 @@ C:\Users\2225318\Documents\Dev\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj
 C:\Users\2225318\Documents\Dev\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\config.txt
 C:\Users\2225318\Documents\Dev\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\logs.txt
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\assets\cadastro-de-avaliador-interno-externo.xlsx
+C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\config.txt
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\geckodriver.exe
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\BotCadastrarAvaliador.exe
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\BotCadastrarAvaliador.deps.json
@@ -58,7 +59,6 @@ C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastra
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\BotCadastrarAvaliador.pdb
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\WebDriver.dll
-C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\BotCadastrarAvaliador.csproj.AssemblyReference.cache
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\Interop.Microsoft.Office.Interop.Excel.dll
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\BotCadastrarAvaliador.csproj.ResolveComReference.cache
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\BotCadastrarAvaliador.Form1.resources
@@ -72,4 +72,4 @@ C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastra
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\ref\BotCadastrarAvaliador.dll
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\BotCadastrarAvaliador.pdb
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\BotCadastrarAvaliador.genruntimeconfig.cache
-C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\config.txt
+C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\BotCadastrarAvaliador.csproj.AssemblyReference.cache

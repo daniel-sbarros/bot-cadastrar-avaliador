@@ -80,6 +80,8 @@ namespace BotCadastrarAvaliador
 
             thread2 = new Thread(() =>
             {
+                DateTime hr_inicio = DateTime.Now;
+
                 if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
                 {
                     MessageBox.Show("Usuario e/ou Senha em branco.");
@@ -114,9 +116,19 @@ namespace BotCadastrarAvaliador
                             if (!bot.isChecked(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{row}]/td[1]/input")))
                                 bot.Click(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{row}]/td[1]/input"));
                         else
-                            Logs($"{DateTime.Now} \tNão encontrou o avaliador: '{av.Nome.Trim()}'.", logs.Name);
+                            Logs($"{DateTime.Now} \tNão encontrou o avaliador: '{av.Nome.Trim()}'.\n", logs.Name);
                     }
 
+                    Thread.Sleep(100);
+                    FormNaFrente();
+
+                    TimeSpan tempo_limite = new TimeSpan(1, 25, 0);
+
+                    if (DateTime.Now < (hr_inicio + tempo_limite))
+                    {
+                        bot.Click(By.Name("Salvar"));
+                    }
+                    
                     BotaoExec(button1, true);
                     MessageBox.Show("TAREFA CONCLUÍDA.");
                 }
@@ -126,6 +138,14 @@ namespace BotCadastrarAvaliador
                 }
             });
             thread2.Start();
+        }
+
+        private void FormNaFrente()
+        {
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(() => this.Activate()));
+            else
+                this.Activate();
         }
 
         private void BotaoExec(Button btn, bool value)
