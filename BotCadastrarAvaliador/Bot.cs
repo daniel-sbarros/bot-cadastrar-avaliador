@@ -11,6 +11,7 @@ namespace BotCadastrarAvaliador
     public class Bot
     {
         private IWebDriver? driver;
+        public string Url { get { return driver.Url ?? null; } }
 
         public Bot()
         {
@@ -20,6 +21,11 @@ namespace BotCadastrarAvaliador
             FirefoxDriverService service = FirefoxDriverService.CreateDefaultService();
             service.HideCommandPromptWindow = true;
             driver = new FirefoxDriver(service, options);
+        }
+
+        public bool isChecked(By by_element)
+        {
+            return driver.FindElement(by_element).Selected;
         }
 
         public bool OpenPage(string url)
@@ -36,6 +42,17 @@ namespace BotCadastrarAvaliador
             }
         }
 
+        private string ReplaceEspecialChars(string str)
+        {
+            string[] acentos = new string[] { "ç", "Ç", "á", "é", "í", "ó", "ú", "ý", "Á", "É", "Í", "Ó", "Ú", "Ý", "à", "è", "ì", "ò", "ù", "À", "È", "Ì", "Ò", "Ù", "ã", "õ", "ñ", "ä", "ë", "ï", "ö", "ü", "ÿ", "Ä", "Ë", "Ï", "Ö", "Ü", "Ã", "Õ", "Ñ", "â", "ê", "î", "ô", "û", "Â", "Ê", "Î", "Ô", "Û" };
+            string[] semAcento = new string[] { "c", "C", "a", "e", "i", "o", "u", "y", "A", "E", "I", "O", "U", "Y", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "a", "o", "n", "a", "e", "i", "o", "u", "y", "A", "E", "I", "O", "U", "A", "O", "N", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U" };
+
+            for (int i = 0; i < acentos.Length; i++)
+                str = str.Replace(acentos[i], semAcento[i]);
+
+            return str.Trim();
+        }
+
         public int FindChild(string xpath_row, string xpath_child, string value)
         {
             try
@@ -46,8 +63,7 @@ namespace BotCadastrarAvaliador
 
                 for (int i=0; i < row.Count; i++)
                 {
-                    //MessageBox.Show(i + ": " + row[i].FindElement(By.XPath(xpath_child)).Text);
-                    if (row[i].FindElement(By.XPath(xpath_child)).Text.Contains(value)) return i + 1;
+                    if (ReplaceEspecialChars(row[i].FindElement(By.XPath(xpath_child)).Text).ToUpper().Contains(ReplaceEspecialChars(value).ToUpper())) return i + 1;
                 }
             }
             catch (Exception err)

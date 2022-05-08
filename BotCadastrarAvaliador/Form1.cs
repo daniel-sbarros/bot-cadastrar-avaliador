@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using System.Text.RegularExpressions;
 
 namespace BotCadastrarAvaliador
 {
@@ -8,10 +9,24 @@ namespace BotCadastrarAvaliador
         Bot bot;
         MSExcel excel;
         List<Avaliador> internos, externos;
+        FileStream logs;
+        Thread thread2;
 
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void createLogsFile()
+        {
+            var now = DateTime.Now;
+            logs = File.Create($"logs_-_{now.Year}-{fNum(now.Month)}-{fNum(now.Day)}_-_{fNum(now.Hour)}-{fNum(now.Minute)}-{fNum(now.Second)}.txt");
+            logs.Close();
+        }
+
+        private string fNum(int num)
+        {
+            return num < 10 ? $"0{num}" : $"{num}";
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -25,9 +40,9 @@ namespace BotCadastrarAvaliador
             cbxTipo.SelectedIndex = 0;
         }
 
-        public void Logs(object texto)
+        public void Logs(object texto, string name_file)
         {
-            StreamReader sr = new(Application.StartupPath + @"\logs.txt");
+            StreamReader sr = new(name_file);
             string line = sr.ReadLine();
             System.Text.StringBuilder conteudo = new();
 
@@ -38,7 +53,7 @@ namespace BotCadastrarAvaliador
             }
             sr.Close();
             
-            StreamWriter sw = new(Application.StartupPath + @"\logs.txt");
+            StreamWriter sw = new(name_file);
             sw.Write(conteudo.ToString());
             sw.WriteLine($"{texto}");
             sw.Close();
@@ -53,49 +68,78 @@ namespace BotCadastrarAvaliador
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
+            if (cbxTipo.SelectedIndex < 0)
             {
-                MessageBox.Show("Usuario e/ou Senha em branco.");
+                MessageBox.Show("Selecione o tipo de registro.");
                 return;
             }
 
-            if (bot == null)
+            string url = @"https://suap.ifma.edu.br/pesquisa/adicionar_comissao_por_area/187/";
+            List<Avaliador> _list = cbxTipo.SelectedIndex == 0 ? internos : externos;
+            BotaoExec(button1, false);
+
+            thread2 = new Thread(() =>
             {
-                bot = new();
-                bot.OpenPage("https://suap.ifma.edu.br/pesquisa/adicionar_comissao_por_area/187/");
-            }
-
-            if (bot.WaitElement(By.Id("id_username")))
-            {
-                if(!bot.SendText(By.Id("id_username"), user)) return;
-                if(!bot.SendText(By.Id("id_password"), pass)) return;
-                Thread.Sleep(300);
-                if(!bot.Click(By.XPath(@"//input[@value='Acessar']"))) return;
-
-                if(!bot.WaitElement(By.ClassName("notifications"))) return;
-
-                bot.Click(By.XPath("//*[@id=\"bolsas_form\"]/table/thead/tr/th[1]/input"));
-                Thread.Sleep(300);
-                bot.Click(By.XPath("//*[@id=\"bolsas_form\"]/table/thead/tr/th[1]/input"));
-                Thread.Sleep(300);
-
-                foreach (DataGridViewRow r in dataGridView1.Rows)
+                if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
                 {
-                    int row = bot.FindChild("//*[@id=\"bolsas_form\"]/table/tbody/tr", "td[2]", r.Cells[0].Value.ToString());
-
-                    if (row > 0)
-                    {
-                        bot.Click(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{row}]/td[1]/input"));
-                    }
-                    else
-                    {
-                        Logs($"Não encontrou o avaliador {r.Cells[0].Value}; {DateTime.Now}");
-                    }
+                    MessageBox.Show("Usuario e/ou Senha em branco.");
+                    return;
                 }
-            }
+                
+                createLogsFile();
+
+                if (bot == null)
+                {
+                    bot = new();
+                    bot.OpenPage(url);
+                }
+
+                if (bot.WaitElement(By.Id("id_username")))
+                {
+                    if (bot.Url != url)
+                    {
+                        if (!bot.SendText(By.Id("id_username"), user)) return;
+                        if (!bot.SendText(By.Id("id_password"), pass)) return;
+                        Thread.Sleep(300);
+                        if (!bot.Click(By.XPath(@"//input[@value='Acessar']"))) return;
+                    }
+
+                    if (!bot.WaitElement(By.ClassName("notifications"))) return;
+
+                    foreach (Avaliador av in _list)
+                    {
+                        int row = bot.FindChild("//*[@id=\"bolsas_form\"]/table/tbody/tr", "td[2]", av.Nome);
+
+                        if (row > 0)
+                            if (!bot.isChecked(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{row}]/td[1]/input")))
+                                bot.Click(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{row}]/td[1]/input"));
+                        else
+                            Logs($"{DateTime.Now} \tNão encontrou o avaliador: '{av.Nome.Trim()}'.", logs.Name);
+                    }
+
+                    BotaoExec(button1, true);
+                    MessageBox.Show("TAREFA CONCLUÍDA.");
+                }
+                else
+                {
+                    MessageBox.Show("A página não foi carregada.");
+                }
+            });
+            thread2.Start();
+        }
+
+        private void BotaoExec(Button btn, bool value)
+        {
+            if (btn.InvokeRequired)
+                btn.Invoke(new MethodInvoker(() =>
+                {
+                    btn.Enabled = value;
+                    btn.Cursor = value ? Cursors.Hand : Cursors.Default;
+                }));
             else
             {
-                MessageBox.Show("A página não foi carregada.");
+                btn.Enabled = value;
+                btn.Cursor = value ? Cursors.Hand : Cursors.Default;
             }
         }
 
@@ -109,12 +153,13 @@ namespace BotCadastrarAvaliador
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(bot != null) bot.Close();
-
-            if (excel != null)
+            try
             {
-                excel.Close();
+                if (thread2 != null && thread2.ThreadState == ThreadState.Running) thread2.Abort();
+                if (bot != null) bot.Close();
+                if (excel != null) excel.Close();
             }
+            catch (Exception) { }
         }
 
         private void cbxTipo_SelectedIndexChanged(object sender, EventArgs e)
