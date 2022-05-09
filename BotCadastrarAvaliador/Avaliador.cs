@@ -9,12 +9,10 @@ namespace BotCadastrarAvaliador
     internal class Avaliador
     {
         public string? Nome { get; private set; }
-        public string? Tipo { get; private set; }
 
-        public Avaliador(string nome, string tipo)
+        public Avaliador(string nome)
         {
             Nome = nome;
-            Tipo = tipo;
         }
     }
 }

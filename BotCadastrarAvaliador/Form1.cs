@@ -8,25 +8,21 @@ namespace BotCadastrarAvaliador
         string? user, pass;
         Bot bot;
         MSExcel excel;
-        List<Avaliador> internos, externos;
+        List<Avaliador> avaliadores, internos, externos;
         FileStream logs;
         Thread thread2;
 
         public Form1()
         {
+            avaliadores = null;
             InitializeComponent();
         }
 
         private void createLogsFile()
         {
             var now = DateTime.Now;
-            logs = File.Create($"logs_-_{now.Year}-{fNum(now.Month)}-{fNum(now.Day)}_-_{fNum(now.Hour)}-{fNum(now.Minute)}-{fNum(now.Second)}.txt");
+            logs = File.Create($"logs_-_{now.Year}-{My.FormatNumber(now.Month)}-{My.FormatNumber(now.Day)}_-_{My.FormatNumber(now.Hour)}-{My.FormatNumber(now.Minute)}-{My.FormatNumber(now.Second)}.txt");
             logs.Close();
-        }
-
-        private string fNum(int num)
-        {
-            return num < 10 ? $"0{num}" : $"{num}";
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -34,8 +30,8 @@ namespace BotCadastrarAvaliador
             LerCredenciais();
 
             excel = excel ?? new MSExcel("cadastro-de-avaliador-interno-externo.xlsx");
-            internos = internos ?? excel.GetListValues(1, "Avaliador Interno");
-            externos = externos ?? excel.GetListValues(2, "Avaliador Externo");
+            internos = internos ?? excel.GetListValues(1);
+            externos = externos ?? excel.GetListValues(2);
 
             cbxTipo.SelectedIndex = 0;
         }
@@ -61,9 +57,19 @@ namespace BotCadastrarAvaliador
 
         private void CarregarDgv()
         {
-
             dataGridView1.DataSource = cbxTipo.SelectedIndex < 0 ? "" : (cbxTipo.SelectedIndex == 0 ? internos : externos);
             lblAviso.Text = $"Registros encontrados: {dataGridView1.RowCount}";
+            dataGridView1.AutoResizeColumns();
+            dataGridView1.AutoResizeRows();
+        }
+
+        private bool findAvaliador(List<Avaliador> avaliadores, string value)
+        {
+            foreach (var av in avaliadores)
+            {
+                if (av.Nome.Contains(value)) return true;
+            }
+            return false;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -75,7 +81,7 @@ namespace BotCadastrarAvaliador
             }
 
             string url = @"https://suap.ifma.edu.br/pesquisa/adicionar_comissao_por_area/187/";
-            List<Avaliador> _list = cbxTipo.SelectedIndex == 0 ? internos : externos;
+            List<Avaliador> lista = cbxTipo.SelectedIndex == 0 ? internos : externos;
             BotaoExec(button1, false);
 
             thread2 = new Thread(() =>
@@ -108,15 +114,38 @@ namespace BotCadastrarAvaliador
 
                     if (!bot.WaitElement(By.ClassName("notifications"))) return;
 
-                    foreach (Avaliador av in _list)
+                    if (avaliadores == null)
                     {
-                        int row = bot.FindChild("//*[@id=\"bolsas_form\"]/table/tbody/tr", "td[2]", av.Nome);
+                        avaliadores = new();
 
-                        if (row > 0)
-                            if (!bot.isChecked(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{row}]/td[1]/input")))
-                                bot.Click(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{row}]/td[1]/input"));
+                        for (int i = 1; i <= bot.getCount(By.XPath("//*[@id=\"bolsas_form\"]/table/tbody/tr")); i++)
+                        {
+                            avaliadores.Add(new Avaliador(bot.getText(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{i}]/td[2]")).ToUpper().Trim()));
+                        }
+                    }
+
+                    for (int i = 0; i < lista.Count; i++)
+                    {
+                        if ((i + 1) % 10 == 0) editTextbox($"Processando: '{i}'", lblAndamento);
+
+                        if (findAvaliador(avaliadores, lista[i].Nome.ToUpper()))
+                        {
+                            for (int r = 0; r < avaliadores.Count; r++)
+                            {
+                                if (avaliadores[r].Nome.Contains(lista[i].Nome.ToUpper()))
+                                {
+                                    if (!bot.isChecked(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input")))
+                                    {
+                                        bot.Click(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input"));
+                                    }
+                                    break;
+                                }
+                            }
+                        }
                         else
-                            Logs($"{DateTime.Now} \tNão encontrou o avaliador: '{av.Nome.Trim()}'.\n", logs.Name);
+                        {
+                            Logs($"{DateTime.Now} -> Não encontrou o avaliador: '{lista[i].Nome.Trim()}'.\n", logs.Name);
+                        }
                     }
 
                     Thread.Sleep(100);
@@ -138,6 +167,14 @@ namespace BotCadastrarAvaliador
                 }
             });
             thread2.Start();
+        }
+
+        private void editTextbox(string text, Label label)
+        {
+            if (label.InvokeRequired)
+                label.Invoke(new MethodInvoker(() => label.Text = text));
+            else
+                label.Text = text;
         }
 
         private void FormNaFrente()

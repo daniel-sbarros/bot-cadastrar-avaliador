@@ -47,7 +47,7 @@ namespace BotCadastrarAvaliador
             catch (Exception) { }
         }
 
-        public List<Avaliador> GetListValues(int planilha_index, string tipo)
+        public List<Avaliador> GetListValues(int planilha_index)
         {
             List<Avaliador> values = new();
 
@@ -57,7 +57,7 @@ namespace BotCadastrarAvaliador
             sheet.Range["A2"].Select();
             while (!string.IsNullOrEmpty(excel.ActiveCell.Value))
             {
-                values.Add(new Avaliador(excel.ActiveCell.Text, tipo));
+                values.Add(new Avaliador(My.ReplaceEspecialChars($"{excel.ActiveCell.Value}".Trim())));
                 excel.ActiveCell.Offset[1, 0].Select();
             }
 

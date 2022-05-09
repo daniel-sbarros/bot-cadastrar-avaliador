@@ -16,7 +16,7 @@ namespace BotCadastrarAvaliador
         public Bot()
         {
             FirefoxOptions options = new();
-            options.AddArguments("--private", "--start-maximized", "--safe-mode", "--disable-component-update", "--no-default-browser-check", "--disable-gpu", "--ignore-certificate-errors");
+            options.AddArguments("--private", "--safe-mode", "--disable-component-update", "--no-default-browser-check", "--disable-gpu", "--ignore-certificate-errors");
 
             FirefoxDriverService service = FirefoxDriverService.CreateDefaultService();
             service.HideCommandPromptWindow = true;
@@ -25,7 +25,12 @@ namespace BotCadastrarAvaliador
 
         public bool isChecked(By by_element)
         {
-            return driver.FindElement(by_element).Selected;
+            try
+            {
+                return driver.FindElement(by_element).Selected;
+            }
+            catch (Exception) { }
+            return false;
         }
 
         public bool OpenPage(string url)
@@ -42,18 +47,29 @@ namespace BotCadastrarAvaliador
             }
         }
 
-        private string ReplaceEspecialChars(string str)
+        public int getCount(By by_element)
         {
-            string[] acentos = new string[] { "ç", "Ç", "á", "é", "í", "ó", "ú", "ý", "Á", "É", "Í", "Ó", "Ú", "Ý", "à", "è", "ì", "ò", "ù", "À", "È", "Ì", "Ò", "Ù", "ã", "õ", "ñ", "ä", "ë", "ï", "ö", "ü", "ÿ", "Ä", "Ë", "Ï", "Ö", "Ü", "Ã", "Õ", "Ñ", "â", "ê", "î", "ô", "û", "Â", "Ê", "Î", "Ô", "Û" };
-            string[] semAcento = new string[] { "c", "C", "a", "e", "i", "o", "u", "y", "A", "E", "I", "O", "U", "Y", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "a", "o", "n", "a", "e", "i", "o", "u", "y", "A", "E", "I", "O", "U", "A", "O", "N", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U" };
+            try
+            {
+                return driver.FindElements(by_element).Count;
+            }
+            catch (Exception) { }
 
-            for (int i = 0; i < acentos.Length; i++)
-                str = str.Replace(acentos[i], semAcento[i]);
-
-            return str.Trim();
+            return 0;
         }
 
-        public int FindChild(string xpath_row, string xpath_child, string value)
+        public string getText(By by_element)
+        {
+            try
+            {
+                return driver.FindElement(by_element).Text;
+            }
+            catch (Exception) { }
+
+            return null;
+        }
+
+        public int FindChildRow(string xpath_row, string xpath_child, string val)
         {
             try
             {
@@ -61,9 +77,9 @@ namespace BotCadastrarAvaliador
 
                 var row = driver!.FindElements(By.XPath(xpath_row));
 
-                for (int i=0; i < row.Count; i++)
+                for (int i = 0; i < row.Count; i++)
                 {
-                    if (ReplaceEspecialChars(row[i].FindElement(By.XPath(xpath_child)).Text).ToUpper().Contains(ReplaceEspecialChars(value).ToUpper())) return i + 1;
+                    if (My.ReplaceEspecialChars(row[i].FindElement(By.XPath(xpath_child)).Text).ToUpper().Contains(My.ReplaceEspecialChars(val).ToUpper())) return i + 1;
                 }
             }
             catch (Exception err)
@@ -72,11 +88,6 @@ namespace BotCadastrarAvaliador
             }
 
             return 0;
-        }
-
-        public bool FindAndClick(string xpath_row, string xpath_child, string value)
-        {
-            return false;
         }
 
         public bool WaitElement(By by_element, int tempo_espera = 30)
@@ -141,6 +152,5 @@ namespace BotCadastrarAvaliador
                 catch (Exception) { }
             }
         }
-
     }
 }
