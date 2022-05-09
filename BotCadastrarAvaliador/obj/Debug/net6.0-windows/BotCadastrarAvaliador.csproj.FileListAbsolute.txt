@@ -46,6 +46,5 @@ C:\Users\2225318\Documents\Dev\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj
 C:\Users\2225318\Documents\Dev\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\refint\BotCadastrarAvaliador.dll
 C:\Users\2225318\Documents\Dev\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\BotCadastrarAvaliador.genruntimeconfig.cache
 C:\Users\2225318\Documents\Dev\bot-cadastrar-avaliador\BotCadastrarAvaliador\obj\Debug\net6.0-windows\ref\BotCadastrarAvaliador.dll
-C:\Users\2225318\Documents\Dev\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\config.txt
-C:\Users\2225318\Documents\Dev\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\logs.txt
 C:\Users\Daniel\Documents\Developer\.NET\new\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\geckodriver.exe
+C:\Users\2225318\Documents\Dev\bot-cadastrar-avaliador\BotCadastrarAvaliador\bin\Debug\net6.0-windows\config.txt

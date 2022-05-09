@@ -66,7 +66,6 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Cursor = System.Windows.Forms.Cursors.Default;
             this.label2.Font = new System.Drawing.Font("Times New Roman", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label2.Location = new System.Drawing.Point(200, 25);
             this.label2.Name = "label2";
@@ -205,7 +204,6 @@
             this.lblAndamento.Name = "lblAndamento";
             this.lblAndamento.Size = new System.Drawing.Size(300, 15);
             this.lblAndamento.TabIndex = 2;
-            this.lblAndamento.Text = "Processando: \'0\'";
             this.lblAndamento.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblAviso

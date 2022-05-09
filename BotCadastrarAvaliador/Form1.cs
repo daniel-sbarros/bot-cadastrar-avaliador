@@ -8,7 +8,8 @@ namespace BotCadastrarAvaliador
         string? user, pass;
         Bot bot;
         MSExcel excel;
-        List<Avaliador> avaliadores, internos, externos;
+        List<Avaliador> internos, externos;
+        List<string> avaliadores;
         FileStream logs;
         Thread thread2;
 
@@ -16,6 +17,8 @@ namespace BotCadastrarAvaliador
         {
             avaliadores = null;
             InitializeComponent();
+
+            Console.WriteLine("Iniciando Aplicação.");
         }
 
         private void createLogsFile()
@@ -63,17 +66,10 @@ namespace BotCadastrarAvaliador
             dataGridView1.AutoResizeRows();
         }
 
-        private bool findAvaliador(List<Avaliador> avaliadores, string value)
-        {
-            foreach (var av in avaliadores)
-            {
-                if (av.Nome.Contains(value)) return true;
-            }
-            return false;
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("Iniciando Seleção de Avaliadores.");
+
             if (cbxTipo.SelectedIndex < 0)
             {
                 MessageBox.Show("Selecione o tipo de registro.");
@@ -120,19 +116,29 @@ namespace BotCadastrarAvaliador
 
                         for (int i = 1; i <= bot.getCount(By.XPath("//*[@id=\"bolsas_form\"]/table/tbody/tr")); i++)
                         {
-                            avaliadores.Add(new Avaliador(bot.getText(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{i}]/td[2]")).ToUpper().Trim()));
+                            avaliadores.Add(bot.getText(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{i}]/td[2]")).ToUpper().Trim());
                         }
+                        MessageBox.Show($"Avaliadores cadastrados.");
                     }
+
+                    MessageBox.Show($"lista.Count: {lista.Count}\n\navaliadores.Count: {avaliadores.Count}");
 
                     for (int i = 0; i < lista.Count; i++)
                     {
-                        if ((i + 1) % 10 == 0) editTextbox($"Processando: '{i}'", lblAndamento);
+                        MessageBox.Show($"1\n\nlista[i].Nome: {lista[i].Nome}\n" +
+                            $"avaliadores[0]: {avaliadores[i]}\n\n" +
+                            $"avaliadores.Contains(lista[i].Nome.ToUpper(): {avaliadores.Contains(lista[i].Nome.ToUpper()) }");
 
-                        if (findAvaliador(avaliadores, lista[i].Nome.ToUpper()))
+                        if (avaliadores.Contains(lista[i].Nome.ToUpper()))
                         {
+                            MessageBox.Show("2");
                             for (int r = 0; r < avaliadores.Count; r++)
                             {
-                                if (avaliadores[r].Nome.Contains(lista[i].Nome.ToUpper()))
+                                MessageBox.Show($"avaliadores[r].Contains(lista[i].Nome.ToUpper()): {avaliadores[r].Contains(lista[i].Nome.ToUpper())}" +
+                                    $"\n\navaliadores[{r}]: {avaliadores[r]}\n" +
+                                    $"lista[{i}].Nome.ToUpper(): {lista[i].Nome.ToUpper()}");
+
+                                if (avaliadores[r].Contains(lista[i].Nome.ToUpper()))
                                 {
                                     if (!bot.isChecked(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input")))
                                     {
@@ -158,13 +164,14 @@ namespace BotCadastrarAvaliador
                         bot.Click(By.Name("Salvar"));
                     }
                     
-                    BotaoExec(button1, true);
                     MessageBox.Show("TAREFA CONCLUÍDA.");
                 }
                 else
                 {
                     MessageBox.Show("A página não foi carregada.");
                 }
+                
+                BotaoExec(button1, true);
             });
             thread2.Start();
         }
