@@ -64,9 +64,9 @@ namespace BotCadastrarAvaliador
             dataGridView1.AutoResizeRows();
         }
 
-        private void pagNaoCarregada()
+        private void pagNaoCarregada(string value = "")
         {
-            MessageBox.Show("Página não Carregada.");
+            MessageBox.Show($"{value} Página não Carregada.");
             BotaoExec(button1, true);
         }
 
@@ -110,18 +110,18 @@ namespace BotCadastrarAvaliador
                         }
                         else
                         {
-                            pagNaoCarregada(); return;
+                            pagNaoCarregada("0"); return;
                         }
                     }
                     else
                     {
-                        pagNaoCarregada(); return;
+                        pagNaoCarregada("1"); return;
                     }
                 }
 
-                if (!bot.WaitElement(By.ClassName("notifications")))
+                if (!bot.WaitElement(By.Name("Salvar")))
                 {
-                    pagNaoCarregada();
+                    pagNaoCarregada("2");
                     return;
                 }
 
