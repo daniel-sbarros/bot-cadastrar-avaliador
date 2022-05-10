@@ -17,19 +17,6 @@ namespace BotCadastrarAvaliador
         {
             avaliadores = null;
             InitializeComponent();
-
-            //List<string> vs = new List<string>();
-            //vs.Add("daniel da silva barros");
-            //vs.Add("milre santos silva");
-            //vs.Add("emilly raquel santos barros");
-
-            //var res = vs.Where(c => c.Contains("daniel") );
-
-
-            //MessageBox.Show($"{string.Join(' ', res)}");
-
-
-            //Console.WriteLine("Iniciando Aplicação.");
         }
 
         private void createLogsFile()
@@ -163,10 +150,6 @@ namespace BotCadastrarAvaliador
                                     bot.Click(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input"));
                                     Logs($">>>>>>>>>>>>>> {lista[l].Nome.ToUpper()} foi selecionado.\n", logs.Name);
                                 }
-                                else
-                                {
-                                    Logs($"{lista[l].Nome.ToUpper()} foi selecionado anteriormente.\n", logs.Name);
-                                }
                                 break;
                             }
                         }
@@ -178,7 +161,6 @@ namespace BotCadastrarAvaliador
                 }
 
                 Thread.Sleep(100);
-                // FormNaFrente();
 
                 TimeSpan tempo_limite = new TimeSpan(1, 25, 0);
 
@@ -193,22 +175,6 @@ namespace BotCadastrarAvaliador
             });
             thread2.Start();
         }
-
-        //private void editTextbox(string text, Label label)
-        //{
-        //    if (label.InvokeRequired)
-        //        label.Invoke(new MethodInvoker(() => label.Text = text));
-        //    else
-        //        label.Text = text;
-        //}
-
-        //private void FormNaFrente()
-        //{
-        //    if (this.InvokeRequired)
-        //        this.Invoke(new MethodInvoker(() => this.Activate()));
-        //    else
-        //        this.Activate();
-        //}
 
         private void BotaoExec(Button btn, bool value)
         {
