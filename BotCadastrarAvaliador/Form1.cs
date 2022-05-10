@@ -72,8 +72,6 @@ namespace BotCadastrarAvaliador
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Iniciando Seleção de Avaliadores.");
-
             if (cbxTipo.SelectedIndex < 0)
             {
                 MessageBox.Show("Selecione o tipo de registro.");
@@ -91,10 +89,11 @@ namespace BotCadastrarAvaliador
                 if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
                 {
                     MessageBox.Show("Usuario e/ou Senha em branco.");
+                    BotaoExec(button1, true);
                     return;
                 }
 
-                if(!File.Exists(logs.Name)) createLogsFile();
+                if(logs == null) createLogsFile();
 
                 bot = bot ?? new();
                 if (bot.Url != url) bot.OpenPage(url);
@@ -134,7 +133,8 @@ namespace BotCadastrarAvaliador
                     {
                         avaliadores.Add(bot.getText(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{i}]/td[2]")).ToUpper().Trim());
                     }
-                    MessageBox.Show($"Avaliadores cadastrados.");
+                    Status($"Avaliadores cadastrados.", lblAndamento);
+                    //MessageBox.Show($"Avaliadores cadastrados.");
                 }
 
                 for (int l = 0; l < lista.Count; l++)
@@ -174,6 +174,18 @@ namespace BotCadastrarAvaliador
                 BotaoExec(button1, true);
             });
             thread2.Start();
+        }
+
+        private void Status(string value, Label label)
+        {
+            if (label.InvokeRequired)
+            {
+                label.Invoke(new MethodInvoker(() => label.Text = value));
+            }
+            else
+            {
+                label.Text = value;
+            }
         }
 
         private void BotaoExec(Button btn, bool value)
