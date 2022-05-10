@@ -18,7 +18,18 @@ namespace BotCadastrarAvaliador
             avaliadores = null;
             InitializeComponent();
 
-            Console.WriteLine("Iniciando Aplicação.");
+            //List<string> vs = new List<string>();
+            //vs.Add("daniel da silva barros");
+            //vs.Add("milre santos silva");
+            //vs.Add("emilly raquel santos barros");
+
+            //var res = vs.Where(c => c.Contains("daniel") );
+
+
+            //MessageBox.Show($"{string.Join(' ', res)}");
+
+
+            //Console.WriteLine("Iniciando Aplicação.");
         }
 
         private void createLogsFile()
@@ -66,6 +77,12 @@ namespace BotCadastrarAvaliador
             dataGridView1.AutoResizeRows();
         }
 
+        private void pagNaoCarregada()
+        {
+            MessageBox.Show("Página não Carregada.");
+            BotaoExec(button1, true);
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Iniciando Seleção de Avaliadores.");
@@ -89,108 +106,109 @@ namespace BotCadastrarAvaliador
                     MessageBox.Show("Usuario e/ou Senha em branco.");
                     return;
                 }
-                
-                createLogsFile();
 
-                if (bot == null)
+                if(!File.Exists(logs.Name)) createLogsFile();
+
+                bot = bot ?? new();
+                if (bot.Url != url) bot.OpenPage(url);
+
+                if (bot.Url != url)
                 {
-                    bot = new();
-                    bot.OpenPage(url);
-                }
-
-                if (bot.WaitElement(By.Id("id_username")))
-                {
-                    if (bot.Url != url)
+                    if (bot.Url.Contains(@"https://suap.ifma.edu.br/accounts/login/?"))
                     {
-                        if (!bot.SendText(By.Id("id_username"), user)) return;
-                        if (!bot.SendText(By.Id("id_password"), pass)) return;
-                        Thread.Sleep(300);
-                        if (!bot.Click(By.XPath(@"//input[@value='Acessar']"))) return;
-                    }
-
-                    if (!bot.WaitElement(By.ClassName("notifications"))) return;
-
-                    if (avaliadores == null)
-                    {
-                        avaliadores = new();
-
-                        for (int i = 1; i <= bot.getCount(By.XPath("//*[@id=\"bolsas_form\"]/table/tbody/tr")); i++)
+                        if (bot.WaitElement(By.Id("id_username")))
                         {
-                            avaliadores.Add(bot.getText(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{i}]/td[2]")).ToUpper().Trim());
-                        }
-                        MessageBox.Show($"Avaliadores cadastrados.");
-                    }
-
-                    MessageBox.Show($"lista.Count: {lista.Count}\n\navaliadores.Count: {avaliadores.Count}");
-
-                    for (int i = 0; i < lista.Count; i++)
-                    {
-                        MessageBox.Show($"1\n\nlista[i].Nome: {lista[i].Nome}\n" +
-                            $"avaliadores[0]: {avaliadores[i]}\n\n" +
-                            $"avaliadores.Contains(lista[i].Nome.ToUpper(): {avaliadores.Contains(lista[i].Nome.ToUpper()) }");
-
-                        if (avaliadores.Contains(lista[i].Nome.ToUpper()))
-                        {
-                            MessageBox.Show("2");
-                            for (int r = 0; r < avaliadores.Count; r++)
-                            {
-                                MessageBox.Show($"avaliadores[r].Contains(lista[i].Nome.ToUpper()): {avaliadores[r].Contains(lista[i].Nome.ToUpper())}" +
-                                    $"\n\navaliadores[{r}]: {avaliadores[r]}\n" +
-                                    $"lista[{i}].Nome.ToUpper(): {lista[i].Nome.ToUpper()}");
-
-                                if (avaliadores[r].Contains(lista[i].Nome.ToUpper()))
-                                {
-                                    if (!bot.isChecked(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input")))
-                                    {
-                                        bot.Click(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input"));
-                                    }
-                                    break;
-                                }
-                            }
+                            if (!bot.SendText(By.Id("id_username"), user) || !bot.SendText(By.Id("id_password"), pass)) return;
+                            Thread.Sleep(300);
+                            if (!bot.Click(By.XPath(@"//input[@value='Acessar']"))) return;
                         }
                         else
                         {
-                            Logs($"{DateTime.Now} -> Não encontrou o avaliador: '{lista[i].Nome.Trim()}'.\n", logs.Name);
+                            pagNaoCarregada(); return;
                         }
                     }
-
-                    Thread.Sleep(100);
-                    FormNaFrente();
-
-                    TimeSpan tempo_limite = new TimeSpan(1, 25, 0);
-
-                    if (DateTime.Now < (hr_inicio + tempo_limite))
+                    else
                     {
-                        bot.Click(By.Name("Salvar"));
+                        pagNaoCarregada(); return;
                     }
-                    
-                    MessageBox.Show("TAREFA CONCLUÍDA.");
                 }
-                else
+
+                if (!bot.WaitElement(By.ClassName("notifications")))
                 {
-                    MessageBox.Show("A página não foi carregada.");
+                    pagNaoCarregada();
+                    return;
                 }
+
+                if (avaliadores == null)
+                {
+                    avaliadores = new();
+
+                    for (int i = 1; i <= bot.getCount(By.XPath("//*[@id=\"bolsas_form\"]/table/tbody/tr")); i++)
+                    {
+                        avaliadores.Add(bot.getText(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{i}]/td[2]")).ToUpper().Trim());
+                    }
+                    MessageBox.Show($"Avaliadores cadastrados.");
+                }
+
+                for (int l = 0; l < lista.Count; l++)
+                {
+                    if (avaliadores.Count(av => av.Contains(lista[l].Nome.ToUpper())) > 0)
+                    {
+                        for (int r = 0; r < avaliadores.Count; r++)
+                        {
+                            if (avaliadores[r].Contains(lista[l].Nome.ToUpper()))
+                            {
+                                if (!bot.isChecked(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input")))
+                                {
+                                    bot.Click(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input"));
+                                    Logs($">>>>>>>>>>>>>> {lista[l].Nome.ToUpper()} foi selecionado.\n", logs.Name);
+                                }
+                                else
+                                {
+                                    Logs($"{lista[l].Nome.ToUpper()} foi selecionado anteriormente.\n", logs.Name);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Logs($">> [ERROR] {DateTime.Now} -> Não encontrou o avaliador: '{lista[l].Nome.Trim()}'.\n", logs.Name);
+                    }
+                }
+
+                Thread.Sleep(100);
+                // FormNaFrente();
+
+                TimeSpan tempo_limite = new TimeSpan(1, 25, 0);
+
+                if (DateTime.Now < (hr_inicio + tempo_limite))
+                {
+                    bot.Click(By.Name("Salvar"));
+                }
+                    
+                MessageBox.Show("TAREFA CONCLUÍDA.");
                 
                 BotaoExec(button1, true);
             });
             thread2.Start();
         }
 
-        private void editTextbox(string text, Label label)
-        {
-            if (label.InvokeRequired)
-                label.Invoke(new MethodInvoker(() => label.Text = text));
-            else
-                label.Text = text;
-        }
+        //private void editTextbox(string text, Label label)
+        //{
+        //    if (label.InvokeRequired)
+        //        label.Invoke(new MethodInvoker(() => label.Text = text));
+        //    else
+        //        label.Text = text;
+        //}
 
-        private void FormNaFrente()
-        {
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(() => this.Activate()));
-            else
-                this.Activate();
-        }
+        //private void FormNaFrente()
+        //{
+        //    if (this.InvokeRequired)
+        //        this.Invoke(new MethodInvoker(() => this.Activate()));
+        //    else
+        //        this.Activate();
+        //}
 
         private void BotaoExec(Button btn, bool value)
         {
