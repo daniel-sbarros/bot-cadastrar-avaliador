@@ -62,7 +62,7 @@ namespace BotCadastrarAvaliador
         {
             try
             {
-                return driver.FindElement(by_element).Text;
+                return My.ReplaceEspecialChars(driver.FindElement(by_element).Text);
             }
             catch (Exception) { }
 

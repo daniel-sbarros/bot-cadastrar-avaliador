@@ -12,6 +12,7 @@ namespace BotCadastrarAvaliador
         List<string> avaliadores;
         FileStream logs;
         Thread thread2;
+        int cont_erros = 0;
 
         public Form1()
         {
@@ -29,6 +30,7 @@ namespace BotCadastrarAvaliador
         private void Form1_Shown(object sender, EventArgs e)
         {
             LerCredenciais();
+            lblStatus.Text = "";
 
             excel = excel ?? new MSExcel("cadastro-de-avaliador-interno-externo.xlsx");
             internos = internos ?? excel.GetListValues(1);
@@ -64,20 +66,24 @@ namespace BotCadastrarAvaliador
             dataGridView1.AutoResizeRows();
         }
 
-        private void pagNaoCarregada(string value = "")
+        private void pagNaoCarregada(string value)
         {
-            MessageBox.Show($"{value} Página não Carregada.");
+            Status(value, lblStatus);
             BotaoExec(button1, true);
+            MessageBox.Show($"{value}");
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Status("", lblStatus);
+
             if (cbxTipo.SelectedIndex < 0)
             {
                 MessageBox.Show("Selecione o tipo de registro.");
                 return;
             }
 
+            string tipo = cbxTipo.Text.ToUpper();
             string url = @"https://suap.ifma.edu.br/pesquisa/adicionar_comissao_por_area/187/";
             List<Avaliador> lista = cbxTipo.SelectedIndex == 0 ? internos : externos;
             BotaoExec(button1, false);
@@ -88,9 +94,8 @@ namespace BotCadastrarAvaliador
 
                 if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
                 {
-                    MessageBox.Show("Usuario e/ou Senha em branco.");
-                    BotaoExec(button1, true);
-                    return;
+                    //MessageBox.Show("Usuario e/ou Senha em branco.");
+                    pagNaoCarregada("Usuario e/ou Senha em branco."); return;
                 }
 
                 if(logs == null) createLogsFile();
@@ -104,38 +109,45 @@ namespace BotCadastrarAvaliador
                     {
                         if (bot.WaitElement(By.Id("id_username")))
                         {
-                            if (!bot.SendText(By.Id("id_username"), user) || !bot.SendText(By.Id("id_password"), pass)) return;
+                            if (!bot.SendText(By.Id("id_username"), user) || !bot.SendText(By.Id("id_password"), pass))
+                            {
+                                pagNaoCarregada("Elementos id_username e/ou id_password não foram carregados."); return;
+                            }
                             Thread.Sleep(300);
-                            if (!bot.Click(By.XPath(@"//input[@value='Acessar']"))) return;
+                            if (!bot.Click(By.XPath(@"//input[@value='Acessar']")))
+                            {
+                                pagNaoCarregada("Não foi possível clicar no botão salvar."); return;
+                            }
                         }
                         else
                         {
-                            pagNaoCarregada("0"); return;
+                            pagNaoCarregada("O elemento id_username não foi carregado."); return;
                         }
                     }
                     else
                     {
-                        pagNaoCarregada("1"); return;
+                        pagNaoCarregada("A página de login não foi carregada."); return;
                     }
                 }
 
-                if (!bot.WaitElement(By.Name("Salvar")))
+                if (!bot.WaitElement(By.Name("Salvar"), 60))
                 {
-                    pagNaoCarregada("2");
-                    return;
+                    pagNaoCarregada("O botão Salvar não foi carregado."); return;
                 }
 
                 if (avaliadores == null)
                 {
+                    Status("Carregando Avaliadores da página Web...", lblStatus);
                     avaliadores = new();
 
                     for (int i = 1; i <= bot.getCount(By.XPath("//*[@id=\"bolsas_form\"]/table/tbody/tr")); i++)
                     {
                         avaliadores.Add(bot.getText(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{i}]/td[2]")).ToUpper().Trim());
                     }
-                    Status($"Avaliadores cadastrados.", lblAndamento);
-                    //MessageBox.Show($"Avaliadores cadastrados.");
+                    Status($"Avaliadores cadastrados.", lblStatus);
                 }
+
+                Logs($"\n>>>>>>>>>>>>>>>>>>>>>>>>>>>> {tipo} <<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n", logs.Name);
 
                 for (int l = 0; l < lista.Count; l++)
                 {
@@ -156,9 +168,12 @@ namespace BotCadastrarAvaliador
                     }
                     else
                     {
-                        Logs($">> [ERROR] {DateTime.Now} -> Não encontrou o avaliador: '{lista[l].Nome.Trim()}'.\n", logs.Name);
+                        cont_erros++;
+                        Logs($">> [ERROR] {DateTime.Now} -> Não encontrou o avaliador: \n{lista[l].Nome.Trim()}\n", logs.Name);
                     }
                 }
+
+                Logs($"\n>>>>>>>>>>>>>>>>>>>>>>>>>>>> TOTAL DE REGISTROS NÃO ENCOTRADOS: {cont_erros} <<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n", logs.Name);
 
                 Thread.Sleep(100);
 
@@ -168,10 +183,10 @@ namespace BotCadastrarAvaliador
                 {
                     bot.Click(By.Name("Salvar"));
                 }
-                    
-                MessageBox.Show("TAREFA CONCLUÍDA.");
                 
+                Status($"Avaliadores {tipo} cadastrados.", lblStatus);
                 BotaoExec(button1, true);
+                MessageBox.Show("TAREFA CONCLUÍDA.");
             });
             thread2.Start();
         }
@@ -205,10 +220,18 @@ namespace BotCadastrarAvaliador
 
         private void LerCredenciais()
         {
-            StreamReader? sr = new StreamReader(Application.StartupPath + @"\config.txt");
-            user = sr.ReadLine().Trim();
-            pass = sr.ReadLine().Trim();
-            sr.Close();
+            try
+            {
+                StreamReader? sr = new StreamReader(Application.StartupPath + @"\config.txt");
+                user = sr.ReadLine().Trim();
+                pass = sr.ReadLine().Trim();
+                sr.Close();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Não foi possível encontrar o arquivo config.txt, adicione o arquivo a pasta raiz do aplicativo.");
+                this.Close();
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

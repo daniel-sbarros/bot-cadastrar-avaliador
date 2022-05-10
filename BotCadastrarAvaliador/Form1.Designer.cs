@@ -43,7 +43,7 @@
             this.cbxTipo = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.lblAndamento = new System.Windows.Forms.Label();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.lblAviso = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
@@ -184,7 +184,7 @@
             // 
             // panel6
             // 
-            this.panel6.Controls.Add(this.lblAndamento);
+            this.panel6.Controls.Add(this.lblStatus);
             this.panel6.Controls.Add(this.lblAviso);
             this.panel6.Controls.Add(this.button1);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -194,23 +194,24 @@
             this.panel6.Size = new System.Drawing.Size(664, 75);
             this.panel6.TabIndex = 0;
             // 
-            // lblAndamento
+            // lblStatus
             // 
-            this.lblAndamento.AutoSize = true;
-            this.lblAndamento.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-            this.lblAndamento.ForeColor = System.Drawing.Color.Lime;
-            this.lblAndamento.Location = new System.Drawing.Point(358, 52);
-            this.lblAndamento.MinimumSize = new System.Drawing.Size(300, 0);
-            this.lblAndamento.Name = "lblAndamento";
-            this.lblAndamento.Size = new System.Drawing.Size(300, 15);
-            this.lblAndamento.TabIndex = 2;
-            this.lblAndamento.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblStatus.ForeColor = System.Drawing.Color.Red;
+            this.lblStatus.Location = new System.Drawing.Point(357, 52);
+            this.lblStatus.MinimumSize = new System.Drawing.Size(300, 0);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(300, 15);
+            this.lblStatus.TabIndex = 2;
+            this.lblStatus.Text = "label3";
+            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblAviso
             // 
             this.lblAviso.AutoSize = true;
             this.lblAviso.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-            this.lblAviso.ForeColor = System.Drawing.Color.Red;
+            this.lblAviso.ForeColor = System.Drawing.Color.Lime;
             this.lblAviso.Location = new System.Drawing.Point(358, 5);
             this.lblAviso.MinimumSize = new System.Drawing.Size(300, 0);
             this.lblAviso.Name = "lblAviso";
@@ -278,6 +279,6 @@
         private Label label1;
         private Label lblAviso;
         private Label label2;
-        private Label lblAndamento;
+        private Label lblStatus;
     }
 }
