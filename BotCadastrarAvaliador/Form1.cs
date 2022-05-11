@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace BotCadastrarAvaliador
@@ -12,8 +13,7 @@ namespace BotCadastrarAvaliador
         List<string> avaliadores;
         FileStream logs;
         Thread thread2;
-        int cont_erros = 0;
-
+        
         public Form1()
         {
             avaliadores = null;
@@ -149,6 +149,10 @@ namespace BotCadastrarAvaliador
 
                 Logs($"\n>>>>>>>>>>>>>>>>>>>>>>>>>>>> {tipo} <<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n", logs.Name);
 
+                StringBuilder nao_encontrados = new();
+                StringBuilder selecionados = new();
+                int nao_encontrados_count = 0;
+
                 for (int l = 0; l < lista.Count; l++)
                 {
                     if (avaliadores.Count(av => av.Contains(lista[l].Nome.ToUpper())) > 0)
@@ -160,7 +164,7 @@ namespace BotCadastrarAvaliador
                                 if (!bot.isChecked(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input")))
                                 {
                                     bot.Click(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input"));
-                                    Logs($">>>>>>>>>>>>>> {lista[l].Nome.ToUpper()} foi selecionado.\n", logs.Name);
+                                    selecionados.AppendLine(lista[l].Nome.ToUpper());
                                 }
                                 break;
                             }
@@ -168,12 +172,20 @@ namespace BotCadastrarAvaliador
                     }
                     else
                     {
-                        cont_erros++;
-                        Logs($">> [ERROR] {DateTime.Now} -> Não encontrou o avaliador: \n{lista[l].Nome.Trim()}\n", logs.Name);
+                        nao_encontrados_count++;
+                        nao_encontrados.AppendLine(lista[l].Nome.Trim());
                     }
                 }
 
-                Logs($"\n>>>>>>>>>>>>>>>>>>>>>>>>>>>> TOTAL DE REGISTROS NÃO ENCOTRADOS: {cont_erros} <<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n", logs.Name);
+                if (selecionados.Length > 0)
+                {
+                    Logs($"\n>>>>>>>>>>>>>>>>>>>>>>>>>>>> AVALIADORES SELECIONADOS\n\n{selecionados}", logs.Name);
+                }
+
+                if (nao_encontrados_count > 0)
+                {
+                    Logs($"\n>>>>>>>>>>>>>>>>>>>>>>>>>>>> {nao_encontrados_count} AVALIADOR(ES) NÃO ENCOTRADOS\n\n{nao_encontrados}", logs.Name);
+                }
 
                 Thread.Sleep(100);
 
@@ -220,18 +232,21 @@ namespace BotCadastrarAvaliador
 
         private void LerCredenciais()
         {
+            StreamReader? sr = null;
+
             try
             {
-                StreamReader? sr = new StreamReader(Application.StartupPath + @"\config.txt");
+                sr = new StreamReader(Application.StartupPath + @"\config.txt");
                 user = sr.ReadLine().Trim();
                 pass = sr.ReadLine().Trim();
-                sr.Close();
             }
             catch (Exception)
             {
                 MessageBox.Show("Não foi possível encontrar o arquivo config.txt, adicione o arquivo a pasta raiz do aplicativo.");
                 this.Close();
             }
+
+            if(sr != null) sr.Close();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
