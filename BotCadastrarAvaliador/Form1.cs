@@ -36,7 +36,22 @@ namespace BotCadastrarAvaliador
             internos = internos ?? excel.GetListValues(1);
             externos = externos ?? excel.GetListValues(2);
 
-            cbxTipo.SelectedIndex = 0;
+            cbxTipo.SelectedIndex = 0; /**/
+        }
+
+        private bool pesquisa_avancada(string find_value, string value)
+        {
+            var nomes = value.Split(" ");
+
+            if(nomes.Length > 0)
+            {
+                var count = nomes.Count(n => My.ReplaceEspecialChars(find_value).ToUpper().Trim().Contains(My.ReplaceEspecialChars(n).Trim().ToUpper()));
+                return count == nomes.Length;
+            }
+            else
+            {
+                return find_value.ToUpper().Contains(value.ToUpper());
+            }
         }
 
         public void Logs(object texto, string name_file)
@@ -94,7 +109,6 @@ namespace BotCadastrarAvaliador
 
                 if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
                 {
-                    //MessageBox.Show("Usuario e/ou Senha em branco.");
                     pagNaoCarregada("Usuario e/ou Senha em branco."); return;
                 }
 
@@ -155,11 +169,13 @@ namespace BotCadastrarAvaliador
 
                 for (int l = 0; l < lista.Count; l++)
                 {
-                    if (avaliadores.Count(av => av.Contains(lista[l].Nome.ToUpper())) > 0)
+                    //if (avaliadores.Count(av => av.Contains(lista[l].Nome.ToUpper())) > 0)
+                    if (avaliadores.Count(av => pesquisa_avancada(av, lista[l].Nome)) > 0)
                     {
                         for (int r = 0; r < avaliadores.Count; r++)
                         {
-                            if (avaliadores[r].Contains(lista[l].Nome.ToUpper()))
+                            //if (avaliadores[r].Contains(lista[l].Nome.ToUpper()))
+                            if (pesquisa_avancada(avaliadores[r], lista[l].Nome))
                             {
                                 if (!bot.isChecked(By.XPath($"//*[@id=\"bolsas_form\"]/table/tbody/tr[{(r + 1)}]/td[1]/input")))
                                 {
@@ -188,7 +204,6 @@ namespace BotCadastrarAvaliador
                 }
 
                 Thread.Sleep(100);
-
                 TimeSpan tempo_limite = new TimeSpan(1, 25, 0);
 
                 if (DateTime.Now < (hr_inicio + tempo_limite))

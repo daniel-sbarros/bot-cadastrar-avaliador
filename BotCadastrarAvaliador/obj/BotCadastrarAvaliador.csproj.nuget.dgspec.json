@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Daniel\\Documents\\Developer\\.NET\\new\\bot-cadastrar-avaliador\\BotCadastrarAvaliador\\BotCadastrarAvaliador.csproj": {}
+    "C:\\Users\\Anisia\\Downloads\\Daniel\\Dev\\bot-cadastrar-avaliador\\BotCadastrarAvaliador\\BotCadastrarAvaliador.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Daniel\\Documents\\Developer\\.NET\\new\\bot-cadastrar-avaliador\\BotCadastrarAvaliador\\BotCadastrarAvaliador.csproj": {
+    "C:\\Users\\Anisia\\Downloads\\Daniel\\Dev\\bot-cadastrar-avaliador\\BotCadastrarAvaliador\\BotCadastrarAvaliador.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Daniel\\Documents\\Developer\\.NET\\new\\bot-cadastrar-avaliador\\BotCadastrarAvaliador\\BotCadastrarAvaliador.csproj",
+        "projectUniqueName": "C:\\Users\\Anisia\\Downloads\\Daniel\\Dev\\bot-cadastrar-avaliador\\BotCadastrarAvaliador\\BotCadastrarAvaliador.csproj",
         "projectName": "BotCadastrarAvaliador",
-        "projectPath": "C:\\Users\\Daniel\\Documents\\Developer\\.NET\\new\\bot-cadastrar-avaliador\\BotCadastrarAvaliador\\BotCadastrarAvaliador.csproj",
-        "packagesPath": "C:\\Users\\Daniel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Daniel\\Documents\\Developer\\.NET\\new\\bot-cadastrar-avaliador\\BotCadastrarAvaliador\\obj\\",
+        "projectPath": "C:\\Users\\Anisia\\Downloads\\Daniel\\Dev\\bot-cadastrar-avaliador\\BotCadastrarAvaliador\\BotCadastrarAvaliador.csproj",
+        "packagesPath": "C:\\Users\\Anisia\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Anisia\\Downloads\\Daniel\\Dev\\bot-cadastrar-avaliador\\BotCadastrarAvaliador\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Daniel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Anisia\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -63,7 +63,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }
